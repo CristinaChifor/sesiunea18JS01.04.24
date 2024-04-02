@@ -56,6 +56,11 @@ class Quiz {
         this.feedback.innerHTML = '';
         this.nextButton.add('hide');
     }
+
+    showQuizEndModal(){
+        const modalContainer = document.querySelector('.modal-conatainer');
+        modalContainer.classList.remove('hide');
+    }
 }
 
 async function initQuiz() {
