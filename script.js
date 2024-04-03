@@ -8,22 +8,26 @@ class Quiz {
         this.currentQuestionIndex = 0;
         this.showQuestion(this.questions[this.currentQuestionIndex]);
         this.nextButton.addEventListener('click', () => this.nextQuestion());
-
+        document.getElementById('reset-button').addEventListener('click', () => window.location.reload());
     }
 
     showQuestion(question) {
         this.questionContainer.textContent = question.question;
         this.answerButtons.innerHTML = '';
         for (const answer of question.answers) {
-            //const answerElement = `<li><button class="btn"></button></li>`;
-            const buttonContainer = document.createElement('li');
-            const buttonElement = document.createElement('button');
-            buttonElement.classList.add('btn');
-            buttonElement.textContent = answer.text;
-            this.answerButtons.appendChild(buttonContainer);
-            buttonContainer.appendChild(buttonElement);
-            buttonElement.addEventListener('click', () => this.selectAnswer(answer, question, buttonElement));
+            this.configAnswer();
         }
+    }
+
+    configAnswer(answer, question) {
+         const buttonContainer = document.createElement('li');
+        const buttonElement = document.createElement('button');
+        buttonElement.classList.add('btn');
+        buttonElement.textContent = answer.text;
+        this.answerButtons.appendChild(buttonContainer);
+        buttonContainer.appendChild(buttonElement);
+        buttonElement.addEventListener('click', () => this.selectAnswer(answer, question, buttonElement));
+    
     }
 
     selectAnswer(answer, question, button) {
@@ -45,7 +49,7 @@ class Quiz {
         this.currentQuestionIndex++;
         this.resetQuestion();
         if(this.currentQuestionIndex >= this.questions.length) {
-            console.log('Sfarsit Quiz');
+            this.showQuizEndModal();
         } else {
             this.showQuestion(this.questions[this.currentQuestionIndex]);
         }
@@ -66,8 +70,7 @@ class Quiz {
 async function initQuiz() {
     const fileContent = await fetch('./questions.json');
     const quizQuestions = await fileContent.json();
-    console.log(quizQuestions);
     const quiz = new Quiz(quizQuestions);
 }
 
-initQuiz();
+document.addEventListener('DOMContentLoaded', () => initQuiz());
